@@ -148,23 +148,11 @@ VoxelEditor.prototype = {
 		});
 
 		$("#button-save").click(function() {
-			var voxelMesh = that.voxelMeshManager.downloadVoxelMesh();
-			that.saveVoxelMesh(voxelMesh);
+			that.voxelMeshManager.downloadVoxelMesh();
 		});
 
 		$("#button-export").click(function() {
-			that.voxelMeshManager.exportToOBJ();
-			that.colorPicker.draw();
-		});
-
-		$("#button-export-js").click(function() {
 			that.voxelMeshManager.exportToOBJ(true);
-			that.colorPicker.draw();
-		});
-
-		$("#button-export-server").click(function() {
-			var mesh = that.voxelMeshManager.exportToServer();
-			that.saveExportedMesh(mesh);
 			that.colorPicker.draw();
 		});
 	},
@@ -172,26 +160,6 @@ VoxelEditor.prototype = {
 	validateVoxelMeshName: function(name) {
 		var re = /^[0-9a-zA-Z_]+$/;
 		return re.exec(name);
-	},
-
-	saveVoxelMesh: function(voxelMesh) {
-		$.ajax({
-			type: "POST",
-			url: "../../../node/urlrewrite/server/save-voxel-mesh",
-			data: JSON.stringify(voxelMesh),
-		}).done(function(msg) {
-			alert(msg);
-		});
-	},
-
-	saveExportedMesh: function(mesh) {
-		$.ajax({
-			type: "POST",
-			url: "../../../node/urlrewrite/server/save-exported-mesh",
-			data: JSON.stringify(mesh),
-		}).done(function(msg) {
-			alert(msg);
-		});
 	},
 
 	importVoxelMesh: function() {

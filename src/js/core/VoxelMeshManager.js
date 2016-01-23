@@ -550,13 +550,6 @@ VoxelMeshManager.prototype = {
 		this.updateMesh();
 	},
 
-	downloadAsZip: function(filename, contentStr) {
-		var zip = new JSZip();
-		zip.file(filename, contentStr);
-		var content = zip.generate();
-		location.href = "data:application/zip;base64," + content;
-	},
-
 	downloadVoxelMesh: function() {
 		var stripped = {};
 		$.extend(true, stripped, this.voxelMesh);
@@ -570,14 +563,19 @@ VoxelMeshManager.prototype = {
 		stripped.glows = this.glows;
 		stripped.name = this.name;
 
-		return stripped;
+		var zip = new JSZip();
+		var filename = this.name + ".js";
+		zip.file(filename, JSON.stringify(stripped));
+		var content = zip.generate();
+
+		this.downloadZip(content);
 	},
 
 	exportToOBJ: function(js) {
 		this.updateMeshForExport();
 
 		var exporter = new THREE.OBJExporter();
-		str = exporter.parse(this.mesh.children[0].geometry);
+		var str = exporter.parse(this.mesh.children[0].geometry);
 
 		var canvasData = this.textureCanvas.toDataURL("image/png");
 		canvasData = canvasData.substr(canvasData.indexOf(",") + 1);
@@ -592,17 +590,13 @@ VoxelMeshManager.prototype = {
 		zip.file(this.name + ".png", canvasData, { base64: true });
 		zip.file(this.name + "_glow.png", glowCanvasData, { base64: true });
 		var content = zip.generate();
-		location.href = "data:application/zip;base64," + content;
+
+		this.downloadZip(content);
 	},
 
-	exportToServer: function() {
-		this.updateMeshForExport();
-
-		var exporter = new THREE.OBJExporter();
-		str = exporter.parse(this.mesh.children[0].geometry);
-
-		return { name: this.name, obj: str };
-	},
+	downloadZip: function(data) {
+		window.location.href = "data:application/zip;base64," + data;
+	}
 };
 
 THREE.EventDispatcher.prototype.apply(VoxelMeshManager.prototype);
