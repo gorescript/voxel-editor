@@ -1,4 +1,6 @@
-GS.VoxelMeshingHelper = {
+import GreedyMeshingHelper from "./GreedyMeshingHelper";
+
+var VoxelMeshingHelper = {
 	faces: {
 		posX: 0,
 		negX: 1,
@@ -27,7 +29,7 @@ GS.VoxelMeshingHelper = {
 		return function(geometry, face, voxelMesh, voxel, size) {
 			var n = geometry.vertices.length;
 
-			for (i = face * 6; i < (face + 1) * 6; i++) {
+			for (var i = face * 6; i < (face + 1) * 6; i++) {
 				var v = vertices[i];
 				var x = (v.x + 1) / 2 - size / 2;
 				var y = (v.y + 1) / 2 - size / 2;
@@ -50,7 +52,7 @@ GS.VoxelMeshingHelper = {
 				new THREE.Vector2(r.x1, r.y0),
 				new THREE.Vector2(r.x1, r.y1),
 				new THREE.Vector2(r.x0, r.y1),
-			]);			
+			]);
 		};
 	}(),
 
@@ -60,7 +62,7 @@ GS.VoxelMeshingHelper = {
 
 		var voxelExists = function(x, y, z, face) {
 			if (that.voxelCoordsWithinBounds(x, y, z, size)) {
-				v = voxelMesh[that.padXYZ(x, y, z)];
+				var v = voxelMesh[that.padXYZ(x, y, z)];
 				if (v !== undefined && v.material == voxel.material && v.visibleFaces !== undefined && v.visibleFaces[face]) {
 					return true;
 				}
@@ -213,7 +215,7 @@ GS.VoxelMeshingHelper = {
 		};
 
 		return result;
-	},	
+	},
 
 	getTexture: function(colors, edgeColors) {
 		var that = this;
@@ -222,7 +224,7 @@ GS.VoxelMeshingHelper = {
 			var rgba = that.vec4FromHex(colors[j]);
 			var rgbaEdge = that.vec4FromHex(edgeColors[j]);
 
-			return { 
+			return {
 				color: that.vec4ToRGBAString(rgba),
 				colorEdge: that.vec4ToRGBAString(rgbaEdge),
 			};
@@ -235,7 +237,7 @@ GS.VoxelMeshingHelper = {
 		var that = this;
 
 		function colorFunc(j) {
-			return { 
+			return {
 				color: glows.center[j] ? "#fff" : "#000",
 				colorEdge: glows.edge[j] ? "#fff" : "#000",
 			};
@@ -249,7 +251,7 @@ GS.VoxelMeshingHelper = {
 		var sideCellSize = cellSize * 0.25;
 		var columnCount = 4;
 		var rowCount = Math.ceil(numColors / columnCount);
-		var width = cellSize * columnCount;		
+		var width = cellSize * columnCount;
 		var height = cellSize * columnCount;
 
 		this.textureColumnCount = columnCount;
@@ -307,7 +309,7 @@ GS.VoxelMeshingHelper = {
 
 		var geometry = new THREE.Geometry();
 
-		var result = GS.GreedyMeshingHelper.voxelsToMesh(voxels, dims);
+		var result = GreedyMeshingHelper.voxelsToMesh(voxels, dims);
 		this.fixTJunctions(result, geometry.vertices, size);
 
 		for (var i = 0; i < result.faces.length; ++i) {
@@ -319,7 +321,7 @@ GS.VoxelMeshingHelper = {
 			var y0 = 1 - Math.floor(k / this.textureColumnCount) * this.textureCellSize - edge;
 			var x1 = x0 + this.textureCellSize - edge * 2;
 			var y1 = y0 - this.textureCellSize + edge * 2;
-			
+
 			geometry.faces.push(new THREE.Face3(q[2], q[3], q[1]));
 			geometry.faces.push(new THREE.Face3(q[3], q[0], q[1]));
 
@@ -334,7 +336,7 @@ GS.VoxelMeshingHelper = {
 				new THREE.Vector2(x0, y1),
 			]);
 		}
-      
+
 		geometry.computeFaceNormals();
 		geometry.computeVertexNormals();
 
@@ -419,3 +421,5 @@ GS.VoxelMeshingHelper = {
 		return mesh;
 	},
 };
+
+export default VoxelMeshingHelper;

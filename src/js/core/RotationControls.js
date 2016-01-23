@@ -1,4 +1,4 @@
-GS.RotationControls = function(camera) {
+function RotationControls(camera) {
 	this.camera = camera;
 
 	this.isRotating = true;
@@ -16,11 +16,9 @@ GS.RotationControls = function(camera) {
 
 	this.mouseDownProperty = "rightMouseDown";
 	this.canvasSelector = "canvas";
-};
+}
 
-GS.RotationControls.prototype = {
-	constructor: GS.RotationControls,
-
+RotationControls.prototype = {
 	init: function() {
 		this.ox = GS.InputHelper.mouseX / window.innerWidth;
 		this.oy = GS.InputHelper.mouseY / window.innerHeight;
@@ -90,8 +88,10 @@ GS.RotationControls.prototype = {
 		var x = this.look.x + this.distance * Math.sin(Math.PI / 180 * this.yAngle) * Math.cos(Math.PI / 180 * this.xAngle);
 		var y = this.look.y + this.distance * Math.cos(Math.PI / 180 * this.yAngle);
 		var z = this.look.z + this.distance * Math.sin(Math.PI / 180 * this.yAngle) * Math.sin(Math.PI / 180 * this.xAngle);
-		
+
 		this.camera.position.set(x, y, z);
 		this.camera.lookAt(this.look);
 	},
 };
+
+export default RotationControls;

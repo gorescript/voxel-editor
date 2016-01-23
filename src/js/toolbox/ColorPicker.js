@@ -1,4 +1,4 @@
-GS.ColorPicker = function(container, colors, edgeColors, glows) {
+function ColorPicker(container, colors, edgeColors, glows) {
 	this.$container = $(container);
 	this.colors = colors;
 	this.edgeColors = edgeColors;
@@ -10,11 +10,9 @@ GS.ColorPicker = function(container, colors, edgeColors, glows) {
 	this.onSelectedIndexChange = function(e) {};
 
 	this.init();
-};
+}
 
-GS.ColorPicker.prototype = {
-	constructor: GS.ColorPicker,
-
+ColorPicker.prototype = {
 	init: function() {
 		var that = this;
 
@@ -24,7 +22,7 @@ GS.ColorPicker.prototype = {
 			width--;
 		}
 		this.cellSize = width / this.columnCount;
-		var height = this.rowCount * this.cellSize;		
+		var height = this.rowCount * this.cellSize;
 
 		this.addDetail();
 
@@ -68,7 +66,7 @@ GS.ColorPicker.prototype = {
 			"<div>",
 				"<input type='color' style='width: 100%' class='color-picker-detail'><br/>",
 				"<input type='color' style='width: 100%; margin-bottom: 5px' class='color-picker-detail-edge'>",
-			"</div>",			
+			"</div>",
 		].join("\n");
 		this.$container.html(detail);
 
@@ -162,7 +160,7 @@ GS.ColorPicker.prototype = {
 
 		if (e !== undefined) {
 			var mx = e.pageX;
-			var my = e.pageY;			
+			var my = e.pageY;
 			this.drawHover(mx - this.containerOffset.left, my - this.containerOffset.top);
 		}
 
@@ -198,4 +196,6 @@ GS.ColorPicker.prototype = {
 	},
 };
 
-THREE.EventDispatcher.prototype.apply(GS.ColorPicker.prototype);
+THREE.EventDispatcher.prototype.apply(ColorPicker.prototype);
+
+export default ColorPicker;

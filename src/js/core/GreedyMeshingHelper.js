@@ -1,6 +1,6 @@
 // https://github.com/mikolalysenko/mikolalysenko.github.com/blob/gh-pages/MinecraftMeshes2/js/greedy.js
 
-GS.GreedyMeshingHelper = {
+var GreedyMeshingHelper = {
 	voxelsToMesh: function() {
 		//Cache buffer internally
 		var mask = new Int32Array(4096);
@@ -102,3 +102,5 @@ GS.GreedyMeshingHelper = {
 		}
 	}(),
 };
+
+export default GreedyMeshingHelper;

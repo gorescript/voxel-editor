@@ -7,8 +7,7 @@ requireDir("./gulp-config");
 global.distFolder = "./dist";
 
 gulp.task("default", function() {
-	// runSequence("clean", "copy", "vendor", "webpack", "less");
-	runSequence("clean", "copy", "vendor", "less");
+	runSequence("clean", "copy", "vendor", "webpack", "less");
 
 	gulp.watch([
 		"./src/index.html",
@@ -19,10 +18,10 @@ gulp.task("default", function() {
 
 	gulp.watch(["./src/**/*.less"], ["less"]);
 
-	// gulp.watch([
-	// 	"./src/js/**/*.html",
-	// 	"./src/js/**/*.js"
-	// ], ["webpack"]);
+	gulp.watch([
+		"./src/js/**/*.html",
+		"./src/js/**/*.js"
+	], ["webpack"]);
 });
 
 gulp.task("prod", function() {

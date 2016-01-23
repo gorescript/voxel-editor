@@ -1,25 +1,15 @@
-GS.ActionTypes = {
-	Add: 0,
-	Remove: 1,
-};
+import RotationControls from "../core/RotationControls";
+import VoxelMeshManager from "../core/VoxelMeshManager";
+import ColorPicker from "./ColorPicker";
 
-GS.VoxelEditor = function() {
-	this.keys = {
-		Escape: 27,
-		Delete: 46,
-		A: 65,
-		Z: 90,
-	};
-
+function VoxelEditor() {
 	this.canvasInfo = {};
 	this.actionLog = [];
 	this.selected = [];
 	this.init();
-};
+}
 
-GS.VoxelEditor.prototype = {
-	constructor: GS.VoxelEditor,
-
+VoxelEditor.prototype = {
 	init: function() {
 		var that = this;
 
@@ -59,10 +49,10 @@ GS.VoxelEditor.prototype = {
 	},
 
 	initComponents: function() {
-		this.voxelMeshManager = new GS.VoxelMeshManager(this.canvasInfo, this.renderer, this.scene, this.camera);
+		this.voxelMeshManager = new VoxelMeshManager(this.canvasInfo, this.renderer, this.scene, this.camera);
 		this.voxelMeshManager.init();
 
-		this.controls = new GS.RotationControls(this.camera);
+		this.controls = new RotationControls(this.camera);
 		this.controls.isRotating = false;
 		this.controls.zoomSpeed = 1;
 		this.controls.distance = 8;
@@ -83,7 +73,7 @@ GS.VoxelEditor.prototype = {
 			$voxelCount.text(e.count);
 		};
 
-		this.colorPicker = new GS.ColorPicker($("#color-picker-container"), this.voxelMeshManager.colors, this.voxelMeshManager.edgeColors,
+		this.colorPicker = new ColorPicker($("#color-picker-container"), this.voxelMeshManager.colors, this.voxelMeshManager.edgeColors,
 			this.voxelMeshManager.glows);
 		this.colorPicker.onSelectedIndexChange = function(e) { that.voxelMeshManager.selectedMaterial = e.index; };
 		this.colorPicker.addEventListener("colorChange", function() {
@@ -219,7 +209,6 @@ GS.VoxelEditor.prototype = {
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
 			that.voxelMeshManager.importVoxelMesh(e.target.result);
-			that.actionLog.length = 0;
 		};
 		fileReader.onerror = function(e) {
 			alert("File read error: " + e.target.error.code);
@@ -227,35 +216,6 @@ GS.VoxelEditor.prototype = {
 		fileReader.readAsText(file);
 
 		$fieldImport.val("");
-	},
-
-	undoAdd: function(action) {
-	},
-
-	undoRemove: function(action) {
-	},
-
-	undoLastAction: function() {
-		var action = this.actionLog.pop();
-		if (action) {
-			switch (action.type) {
-				case GS.ActionTypes.Add:
-					// undoAdd(action);
-					break;
-				case GS.ActionTypes.Remove:
-					// undoRemove(action);
-					break;
-			}
-		}
-	},
-
-	onDelete: function() {
-	},
-
-	onEscape: function() {
-	},
-
-	onSelectAll: function() {
 	},
 
 	update: function() {
@@ -270,24 +230,6 @@ GS.VoxelEditor.prototype = {
 							"Z: " + cursorPosition.z);
 		} else {
 			$position.text("X: ---, Y: ---, Z: ---");
-		}
-
-		GS.InputHelper.checkPressedKeys();
-
-		if (!GS.InputHelper.keysPressed && GS.InputHelper.ctrl && GS.InputHelper.isKeyDown(this.keys.A)) {
-			this.onSelectAll();
-		}
-
-		if (!GS.InputHelper.keysPressed && GS.InputHelper.isKeyDown(this.keys.Escape)) {
-			this.onEscape();
-		}
-
-		if (!GS.InputHelper.keysPressed && GS.InputHelper.ctrl && GS.InputHelper.isKeyDown(this.keys.Z)) {
-			this.undoLastAction();
-		}
-
-		if (!GS.InputHelper.keysPressed && GS.InputHelper.isKeyDown(this.keys.Delete)) {
-			this.onDelete();
 		}
 	},
 
@@ -325,7 +267,4 @@ GS.VoxelEditor.prototype = {
 	},
 };
 
-var VOXEL_EDITOR;
-window.addEventListener("load", function() {
-	VOXEL_EDITOR = new GS.VoxelEditor();
-}, false);
+export default VoxelEditor;

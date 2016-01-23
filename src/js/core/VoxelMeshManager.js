@@ -1,4 +1,6 @@
-GS.VoxelMeshManager = function(canvasInfo, renderer, scene, camera) {
+import VoxelMeshingHelper from "./VoxelMeshingHelper";
+
+function VoxelMeshManager(canvasInfo, renderer, scene, camera) {
 	this.canvasInfo = canvasInfo;
 	this.renderer = renderer;
 	this.scene = scene;
@@ -26,9 +28,9 @@ GS.VoxelMeshManager = function(canvasInfo, renderer, scene, camera) {
 	this.projector = new THREE.Projector();
 
 	this.onCountChange = function(e) {};
-};
+}
 
-GS.VoxelMeshManager.prototype = {
+VoxelMeshManager.prototype = {
 	init: function() {
 		this.mesh = new THREE.Object3D();
 		this.scene.add(this.mesh);
@@ -50,7 +52,7 @@ GS.VoxelMeshManager.prototype = {
 	},
 
 	updateTexture: function() {
-		var result = GS.VoxelMeshingHelper.getTexture(this.colors, this.edgeColors);
+		var result = VoxelMeshingHelper.getTexture(this.colors, this.edgeColors);
 		this.texture = result.texture;
 		this.texture.anisotropy = this.maxAnisotropy;
 		this.textureCanvas = result.canvas;
@@ -62,10 +64,10 @@ GS.VoxelMeshManager.prototype = {
 	},
 
 	viewGeneratedTexture: function() {
-		//var result = GS.VoxelMeshingHelper.getTexture(this.colors);
-		var vmh = GS.VoxelMeshingHelper;
+		//var result = VoxelMeshingHelper.getTexture(this.colors);
+		var vmh = VoxelMeshingHelper;
 		var sides = vmh.cellSides.Up | vmh.cellSides.Left | vmh.cellSides.Right;
-		var r = GS.VoxelMeshingHelper.getUVsForMaterial(5, sides);
+		var r = VoxelMeshingHelper.getUVsForMaterial(5, sides);
 		this.drawCoords(this.textureCanvas, r);
 		this.textureCanvas.style.width = "768px";
 		this.textureCanvas.style.height = "768px";
@@ -490,7 +492,7 @@ GS.VoxelMeshManager.prototype = {
 
 	updateMesh: function() {
 		this.clear();
-		this.mesh.add(GS.VoxelMeshingHelper.voxelMeshToTriangleMesh(this.voxelMesh, this.size, this.material));
+		this.mesh.add(VoxelMeshingHelper.voxelMeshToTriangleMesh(this.voxelMesh, this.size, this.material));
 	},
 
 	updateMeshForExport: function() {
@@ -501,7 +503,7 @@ GS.VoxelMeshManager.prototype = {
 		this.updateTexture();
 
 		this.clear();
-		this.mesh.add(GS.VoxelMeshingHelper.voxelMeshToTriangleMeshGreedy(this.voxelMesh, this.size, this.material));
+		this.mesh.add(VoxelMeshingHelper.voxelMeshToTriangleMeshGreedy(this.voxelMesh, this.size, this.material));
 	},
 
 	importVoxelMesh: function(jsonStr) {
@@ -580,7 +582,7 @@ GS.VoxelMeshManager.prototype = {
 		var canvasData = this.textureCanvas.toDataURL("image/png");
 		canvasData = canvasData.substr(canvasData.indexOf(",") + 1);
 
-		var glowCanvas = GS.VoxelMeshingHelper.getGlowTexture(this.glows).canvas;
+		var glowCanvas = VoxelMeshingHelper.getGlowTexture(this.glows).canvas;
 		var glowCanvasData = glowCanvas.toDataURL("image/png");
 		glowCanvasData = glowCanvasData.substr(glowCanvasData.indexOf(",") + 1);
 
@@ -603,4 +605,6 @@ GS.VoxelMeshManager.prototype = {
 	},
 };
 
-THREE.EventDispatcher.prototype.apply(GS.VoxelMeshManager.prototype);
+THREE.EventDispatcher.prototype.apply(VoxelMeshManager.prototype);
+
+export default VoxelMeshManager;

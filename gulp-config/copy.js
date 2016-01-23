@@ -11,7 +11,4 @@ gulp.task("copy", function() {
 
 	gulp.src(["./src/fonts/**/*"])
 		.pipe(gulp.dest(global.distFolder + "/fonts"));
-
-	gulp.src(["./src/js/**/*"])
-		.pipe(gulp.dest(global.distFolder + "/js"));
 });
