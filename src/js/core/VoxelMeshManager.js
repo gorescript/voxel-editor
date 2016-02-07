@@ -28,6 +28,10 @@ function VoxelMeshManager(canvasInfo, renderer, scene, camera) {
 	this.projector = new THREE.Projector();
 
 	this.onCountChange = function(e) {};
+
+	this.keys = {
+		X: 88
+	};
 }
 
 VoxelMeshManager.prototype = {
@@ -462,26 +466,28 @@ VoxelMeshManager.prototype = {
 			this.mousePressed = false;
 		}
 
-		this.cursorMesh.visible = !GS.InputHelper.middleMouseDown;
-		if (mx < this.canvasInfo.width && !GS.InputHelper.middleMouseDown) {
-			this.updateCursorMesh(mx, my);
+		GS.InputHelper.checkPressedKeys();
 
-			if (!this.mousePressed && GS.InputHelper.leftMouseDown) {
-				if (this.cursorPosition !== undefined) {
-					var v = this.cursorPosition;
-					this.addVoxel(v.x, v.y, v.z, this.selectedMaterial);
+		this.cursorMesh.visible = !GS.InputHelper.rightMouseDown;
+		if (mx < this.canvasInfo.width) {
+			if (!GS.InputHelper.rightMouseDown) {
+				this.updateCursorMesh(mx, my);
+
+				if (!this.mousePressed && GS.InputHelper.leftMouseDown) {
+					if (this.cursorPosition !== undefined) {
+						var v = this.cursorPosition;
+						this.addVoxel(v.x, v.y, v.z, this.selectedMaterial);
+					}
+					this.mousePressed = true;
+					this.timeOfLastMousePress = new Date();
 				}
-				this.mousePressed = true;
-				this.timeOfLastMousePress = new Date();
 			}
 
-			if (!this.mousePressed && GS.InputHelper.rightMouseDown) {
+			if (!GS.InputHelper.keysPressed && GS.InputHelper.isKeyDown(this.keys.X)) {
 				if (this.selectedVoxel !== undefined) {
 					var v = this.selectedVoxel.pos;
 					this.removeVoxel(v.x, v.y, v.z);
 				}
-				this.mousePressed = true;
-				this.timeOfLastMousePress = new Date();
 			}
 		}
 	},
